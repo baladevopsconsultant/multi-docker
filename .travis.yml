@@ -2,10 +2,10 @@ sudo: required
 services:
  - docker
 before_install:
- - docker build -t bala/multidocker-react-test -f ./client/Dockerfile.dev ./client
+ - docker build -t bala/multidocker-reacttest -f ./client/Dockerfile.dev ./client
 
 script:
- - docker run -e CI=true bala/multidocker-react-test npm run test -- --coverage
+ - docker run -e CI=true bala/multidocker-reacttest npm run test -- --coverage
  
 after_success:
  - docker build -t bala/multi-client ./client
