@@ -1,0 +1,21 @@
+sudo: required
+services:
+ - docker
+before_install:
+ - docker build -t bala/multidocker-react-test -f ./client/Dockerfile.dev ./client
+
+script:
+ - docker run -e CI=true bala/multidocker-react-test npm run test -- --coverage
+ 
+after_success:
+ - docker build -t bala/multi-client ./client
+ - docker build -t bala/multi-nginx ./nginx
+ - docker build -t bala/multi-server ./server
+ - docker build -t bala/multi-worker ./worker
+ ####docker push to docker hub, we need to login first to dockerhub####
+ # ###specify the credentials as Env Variable in Travis CI###
+ - echo "$DOCKER_PASS" | docker login -u "$DOCKER_HUB_ID" --password-stdin
+ - docker push bala/multi-client
+ - docker push bala/multi-nginx
+ - docker push bala/multi-server
+ - docker push bala/multi-worker
